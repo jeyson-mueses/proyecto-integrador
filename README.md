@@ -47,6 +47,6 @@ intermedios como soluciones finales.
   precisión y la comprensión del comportamiento de las funciones y sistemas de ecuaciones son
   esenciales para garantizar resultados confiables en un entorno empresarial.
 
-![alt text](image.png)
+![alt text](./Prework/image.png)
 
-![alt text](image-1.png)
+![alt text](./Prework/image-1.png)
