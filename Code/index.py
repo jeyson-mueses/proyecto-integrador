@@ -10,6 +10,6 @@ def MenuPrincipal():
         print("2. Modelado de funciones matemáticas")
         print("3. Salir ")
         while True:
-            if op
+           
     except:    
     
