@@ -1,0 +1,13 @@
+print("///////////////Bienvenido a Proyecto Interdisciplinario///////////////")
+print("Integrantes")
+print(">> Julián Solorzano")
+print(">> Jason Mueses")
+print("                                                                                         ")
+print("Programa  destinado para la resolución de sistemas de Ecuaciones y modelado de funciones ")
+print("                                                                                         ")
+
+print("Seleccione la operacion que desea ejecutar")
+print("                                          ")
+print("1. Modelado de Funciones")
+print("2. Resolucion de sistemas de ecuaciones") 
+
