@@ -135,7 +135,7 @@ def MenuPrincipal():
             print("///////////////Bienvenido a Proyecto Interdisciplinario///////////////")
             print("Integrantes")
             print(">> Julián Solorzano")
-            print(">> Jason Mueses")
+            print(">> Jeyson Mueses")
             print("                                                                                         ")
             print("Programa diseñado para el cálculo de Sistemas de ecuaciones y Modelado de funciones matemáticas")
             print("1. Sistemas de Ecuaciones")

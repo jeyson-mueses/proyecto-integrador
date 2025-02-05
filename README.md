@@ -1,52 +1,81 @@
-# Proyecto Integrador - PUCETEC
+# Proyecto Integrador - Análisis Matemático con Python - PUCETEC
 
-## Grupo 1
+## 📌 Descripción
+Este proyecto integra Matemáticas, Álgebra y Programación para desarrollar una aplicación que permite:
+- Modelar funciones matemáticas (lineales, cuadráticas y cúbicas).
+- Calcular propiedades de las funciones (dominio, rango, puntos de corte, monotonía, etc.).
+- Resolver sistemas de ecuaciones 3x3 mediante los métodos de Cramer, Gauss-Jordan y Álgebra Lineal.
+- Graficar funciones para análisis visual.
+- Exportar resultados en archivos CSV para su posterior análisis.
 
-- Julian Solorzano
-- Jeyson Mueses
+## 🛠️ Tecnologías Utilizadas
+- **Python** (versión 3.8 o superior)
+- **Matplotlib** para generación de gráficos
+- **Pandas** para manejo y exportación de datos
+- **Streamlit** para la interfaz gráfica
 
-El proyecto integrador busca fomentar el aprendizaje interdisciplinario mediante la combinación de
-conocimientos de Matemática, Álgebra y Programación, promoviendo el desarrollo de habilidades
-analíticas y de resolución de problemas en un contexto práctico.
+## 🚀 Instalación
+1. **Clonar el repositorio**
+   ```sh
+   git clone https://github.com/jeyson-mueses/proyecto-integrador.git
+   cd proyecto-integrador
+   ```
 
-Los estudiantes aplicarán conceptosfundamentales de las tres asignaturas para crear un programa en Python que permita explorar propiedades de funciones matemáticas y resolver sistemas de ecuaciones.
+2. **Crear un entorno virtual (opcional pero recomendado)**
+   ```sh
+   python -m venv venv
+   source venv/bin/activate  # En macOS/Linux
+   venv\Scripts\activate  # En Windows
+   ```
 
-Este desafío implica no solo la implementación de algoritmos desde cero, sino también la capacidad de interpretar resultados y comunicar efectivamente el proceso y los hallazgos. Con este enfoque, se pretende reforzar competencias técnicas y fomentar el trabajo colaborativo, la creatividad y el pensamiento crítico en un entorno de aprendizaje aplicado.
+3. **Instalar dependencias**
+   ```sh
+   pip install -r requirements.txt
+   ```
 
-Los sistemas de ecuaciones y las funciones matemáticas desempeñan un papel fundamental en la
-ciencia de la computación, ya que son herramientas esenciales para modelar y resolver problemas
-complejos en diversas áreas. Los sistemas de ecuaciones lineales, por ejemplo, son ampliamente
-utilizados en algoritmos de optimización, gráficos computacionales y machine learning, permitiendo
-representar y solucionar relaciones entre variables interdependientes. Por otro lado, las funciones
-matemáticas, ya sean lineales, cuadráticas o cúbicas, son la base para estudiar el comportamiento de datos, modelar fenómenos naturales y diseñar algoritmos eficientes. En el desarrollo de software y simulaciones, estas herramientas permiten abordar problemas de análisis, predicción y control,
-demostrando cómo las matemáticas actúan como un lenguaje universal que conecta la teoría con la
-práctica en la computación.
+## ▶️ Ejecución
+Para iniciar la aplicación, ejecuta el siguiente comando:
+```sh
+streamlit run main.py
+```
+Esto abrirá la interfaz gráfica en tu navegador, donde podrás seleccionar entre modelar funciones o resolver sistemas de ecuaciones.
 
-- Problema:
-  Usted es parte de un equipo de desarrolladores de software está diseñando una aplicación para
-  analizar y visualizar datos financieros. Como parte del módulo de análisis matemático, se requiere
-  implementar un programa que permita a los usuarios:
+## 📂 Estructura del Proyecto
+```
+proyecto_integrador/
+│── main.py              # Punto de entrada del programa
+│── funciones.py         # Modelado de funciones matemáticas
+│── sistemas.py          # Resolución de sistemas de ecuaciones
+│── graficos.py          # Generación de gráficas
+│── exportar.py          # Funciones para exportar resultados
+│── ui.py                # Interfaz en Streamlit
+│── tests.py             # Pruebas unitarias básicas
+│── README.md            # Documentación
+│── requirements.txt     # Librerías necesarias
+```
 
-Modelar funciones matemáticas: Dado un conjunto de datos financieros, la tendencia puede ser
-aproximada mediante una regresión que permite generar una función (lineal, cuadrática o cúbica).
-El programa debe permitir introducir hasta tres funciones a la vez, calcular propiedades clave de
-cada función, como el dominio, rango, monotonía, puntos de corte con los ejes, paridad, y gráfica
-(en caso de que se ingrese más de una función, se deberá generar un diagrama con sugráficas)
-Resolver sistemas de ecuaciones: Para optimizar los recursos financieros de una empresa, el
-programa debe incluir la funcionalidad para resolver sistemas de ecuaciones 3x3 que representen
-restricciones o relaciones entre variables económicas. Esto debe realizarse mediante tres métodos
-diferentes: Regla de Cramer, Álgebra Lineal y Gauss-Jordan, proporcionando tanto resultados
-intermedios como soluciones finales.
+## 📖 Uso
+### 1️⃣ Modelado de Funciones Matemáticas
+- Ingresa coeficientes de la función separados por comas.
+- Se calcularán propiedades como dominio, rango, puntos de corte, etc.
+- Se generará la gráfica de la función.
 
-- Restricciones:
-  No se permite el uso de funciones predefinidas de bibliotecas de Python para los cálculos
-  específicos (excepto en el caso de gráficas de funciones cúbicas).
-  Los métodos implementados deben ser desarrollados desde cero, aplicando los conceptos
-  matemáticos y algorítmicos aprendidos.
-  Este proyecto simula el desarrollo de un sistema de soporte para la toma de decisiones, donde la
-  precisión y la comprensión del comportamiento de las funciones y sistemas de ecuaciones son
-  esenciales para garantizar resultados confiables en un entorno empresarial.
+### 2️⃣ Resolución de Sistemas de Ecuaciones
+- Ingresa los coeficientes de un sistema 3x3.
+- Se resolverá utilizando diferentes métodos matemáticos.
+- Los resultados se podrán exportar en formato CSV.
 
-![alt text](./Prework/image.png)
+## 🧪 Pruebas
+Para ejecutar pruebas unitarias, usa:
+```sh
+pytest tests.py
+```
+Esto validará que los cálculos de sistemas de ecuaciones sean correctos.
 
-![alt text](./Prework/image-1.png)
+## 📌 Autores
+- **Jeyson Mueses** -
+- **Julìan Solòrzano** -
+
+## 📜 Licencia
+Este proyecto se distribuye bajo la licencia MIT. ¡Siéntete libre de contribuir y mejorar! 🎯
+
