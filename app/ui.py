@@ -1,18 +1,7 @@
 import streamlit as st
+from core.funciones import calcular_propiedades_funcion, validar_coeficientes
+from services.graficos import graficar_funcion
 from core.sistemas import resolver_cramer, resolver_algebra_lineal, resolver_gauss_jordan, formatear_numero
-
-
-# Función auxiliar para formatear números
-def formatear_numero(valor):
-    """
-    Formatea un número para mostrarlo como entero si es equivalente a un valor entero,
-    o como decimal con dos cifras si no lo es.
-    """
-    if abs(valor - round(valor)) < 1e-9:  # Verificar si el número es prácticamente un entero
-        return int(round(valor))
-    else:
-        return f"{valor:.2f}"  # Mantener dos cifras decimales si no es un entero
-
 
 # Inicializar el estado de la aplicación
 if 'screen' not in st.session_state:
@@ -32,33 +21,22 @@ def mostrar_interfaz():
         mostrar_pantalla_sistemas()
 
 def mostrar_pantalla_principal():
-    # Centrar el título usando HTML/CSS
     st.markdown("""
         <h1 style='text-align: center; margin-bottom: 30px;'>¿Qué quieres resolver hoy?</h1>
     """, unsafe_allow_html=True)
     
-    # Contenedor para centrar los botones
     with st.container():
-        st.markdown("<div style='margin-top: 50px;'></div>", unsafe_allow_html=True)
-        
-        col1, col2, col3 = st.columns([1, 2, 1])  # Columnas: izquierda, centro, derecha
-        
-        with col2:  # Los botones estarán en la columna central
-            if st.button("Funciones Matemáticas", key="btn_funciones", help="Resuelve funciones lineales, cuadráticas y cúbicas"):
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            if st.button("Funciones Matemáticas", key="btn_funciones"):
                 st.session_state.screen = "funciones"
-            
-            st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)  # Espacio entre botones
-            
-            if st.button("Sistemas de Ecuaciones", key="btn_sistemas", help="Resuelve sistemas de ecuaciones 3x3"):
+            st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
+            if st.button("Sistemas de Ecuaciones", key="btn_sistemas"):
                 st.session_state.screen = "sistemas"
 
 def mostrar_pantalla_funciones():
-    from core.funciones import calcular_propiedades_funcion
-    from services.graficos import graficar_funcion
-    
     st.header("Modelado de Funciones Matemáticas")
     
-    # Paso 1: Preguntar cuántas funciones quiere ingresar
     if st.session_state.num_funciones == 0:
         st.write("¿Cuántas funciones quieres ingresar?")
         col1, col2, col3 = st.columns(3)
@@ -72,98 +50,72 @@ def mostrar_pantalla_funciones():
             if st.button("3 Funciones", key="btn_3_funciones"):
                 st.session_state.num_funciones = 3
     else:
-        # Paso 2: Para cada función, pedir el tipo y los coeficientes
         for i in range(st.session_state.num_funciones):
             if i >= len(st.session_state.funciones_ingresadas):
                 st.subheader(f"Función {i + 1}")
-                
-                # Seleccionar el tipo de función
                 tipo_funcion = st.selectbox(
                     f"Selecciona el tipo de función {i + 1}",
                     ["Lineal (ax + b)", "Cuadrática (ax² + bx + c)", "Cúbica (ax³ + bx² + cx + d)"],
                     key=f"tipo_funcion_{i}"
                 )
                 
-                # Entrada de coeficientes según el tipo de función
                 if tipo_funcion == "Lineal (ax + b)":
-                    a = st.number_input("Ingrese el coeficiente a:", value=1.0, key=f"a_lineal_{i}")
-                    b = st.number_input("Ingrese el intercepto b:", value=0.0, key=f"b_lineal_{i}")
+                    a = st.number_input("Coeficiente a:", value=1.0, key=f"a_lineal_{i}")
+                    b = st.number_input("Intercepto b:", value=0.0, key=f"b_lineal_{i}")
                     funcion = lambda x, a=a, b=b: a * x + b
+                    coeficientes = (a, b)
                 elif tipo_funcion == "Cuadrática (ax² + bx + c)":
-                    a = st.number_input("Ingrese el coeficiente a:", value=1.0, key=f"a_cuadratica_{i}")
-                    b = st.number_input("Ingrese el coeficiente b:", value=0.0, key=f"b_cuadratica_{i}")
-                    c = st.number_input("Ingrese el término independiente c:", value=0.0, key=f"c_cuadratica_{i}")
+                    a = st.number_input("Coeficiente a:", value=1.0, key=f"a_cuadratica_{i}")
+                    b = st.number_input("Coeficiente b:", value=0.0, key=f"b_cuadratica_{i}")
+                    c = st.number_input("Término independiente c:", value=0.0, key=f"c_cuadratica_{i}")
                     funcion = lambda x, a=a, b=b, c=c: a * x**2 + b * x + c
+                    coeficientes = (a, b, c)
                 elif tipo_funcion == "Cúbica (ax³ + bx² + cx + d)":
-                    a = st.number_input("Ingrese el coeficiente a:", value=1.0, key=f"a_cubica_{i}")
-                    b = st.number_input("Ingrese el coeficiente b:", value=0.0, key=f"b_cubica_{i}")
-                    c = st.number_input("Ingrese el coeficiente c:", value=0.0, key=f"c_cubica_{i}")
-                    d = st.number_input("Ingrese el término independiente d:", value=0.0, key=f"d_cubica_{i}")
+                    a = st.number_input("Coeficiente a:", value=1.0, key=f"a_cubica_{i}")
+                    b = st.number_input("Coeficiente b:", value=0.0, key=f"b_cubica_{i}")
+                    c = st.number_input("Coeficiente c:", value=0.0, key=f"c_cubica_{i}")
+                    d = st.number_input("Término independiente d:", value=0.0, key=f"d_cubica_{i}")
                     funcion = lambda x, a=a, b=b, c=c, d=d: a * x**3 + b * x**2 + c * x + d
+                    coeficientes = (a, b, c, d)
                 
-                # Botón para agregar la función
                 if st.button(f"Agregar Función {i + 1}", key=f"agregar_funcion_{i}"):
-                    st.session_state.funciones_ingresadas.append((tipo_funcion.split(" ")[0], funcion))
-                    st.success(f"Función {i + 1} agregada correctamente.")
+                    if validar_coeficientes(coeficientes):
+                        st.session_state.funciones_ingresadas.append((tipo_funcion.split(" ")[0], funcion, coeficientes))
+                        st.success(f"Función {i + 1} agregada correctamente.")
+                    else:
+                        st.error("Error: Los coeficientes ingresados no son válidos. Por favor, verifica los valores.")
         
-        # Mostrar todas las funciones ingresadas
         if len(st.session_state.funciones_ingresadas) == st.session_state.num_funciones:
             st.subheader("Funciones Ingresadas:")
-            for idx, (tipo_funcion, _) in enumerate(st.session_state.funciones_ingresadas):
+            for idx, (tipo_funcion, _, _) in enumerate(st.session_state.funciones_ingresadas):
                 st.write(f"{idx + 1}. {tipo_funcion}")
             
-            # Botón para calcular y graficar
             if st.button("Calcular y Graficar"):
-                for idx, (tipo_funcion, funcion) in enumerate(st.session_state.funciones_ingresadas):
+                for idx, (tipo_funcion, funcion, coeficientes) in enumerate(st.session_state.funciones_ingresadas):
                     st.write(f"Propiedades de la Función {idx + 1}:")
-                    propiedades = calcular_propiedades_funcion(funcion, tipo_funcion)
-                    st.write(propiedades)
-                    
-                    # Obtener los coeficientes de la función
+                    propiedades = calcular_propiedades_funcion(funcion, tipo_funcion, coeficientes)
+                    for propiedad, valor in propiedades.items():
+                        st.write(f"{propiedad}: {valor}")
                     try:
-                        if tipo_funcion == "Lineal":
-                            a = st.session_state[f"a_lineal_{idx}"]
-                            b = st.session_state[f"b_lineal_{idx}"]
-                            coeficientes = (a, b)
-                        elif tipo_funcion == "Cuadrática":
-                            a = st.session_state[f"a_cuadratica_{idx}"]
-                            b = st.session_state[f"b_cuadratica_{idx}"]
-                            c = st.session_state[f"c_cuadratica_{idx}"]
-                            coeficientes = (a, b, c)
-                        elif tipo_funcion == "Cúbica":
-                            a = st.session_state[f"a_cubica_{idx}"]
-                            b = st.session_state[f"b_cubica_{idx}"]
-                            c = st.session_state[f"c_cubica_{idx}"]
-                            d = st.session_state[f"d_cubica_{idx}"]
-                            coeficientes = (a, b, c, d)
-                        
-                        # Graficar la función con la ecuación
-                        graficar_funcion(funcion, tipo_funcion, coeficientes)
-                    except KeyError as e:
-                        st.error(f"Falta un coeficiente para la función {idx + 1}. Por favor, completa todos los campos.")
+                        graficar_funcion(funcion, tipo_funcion, coeficientes, propiedades)
+                    except Exception as e:
+                        st.error(f"Error al graficar la función {idx + 1}: {str(e)}")
     
-    # Botón de regreso
     if st.button("Regresar", key="back_button"):
-        # Reiniciar todos los estados relacionados con las funciones
         st.session_state.screen = "main"
         st.session_state.num_funciones = 0
         st.session_state.funciones_ingresadas = []
 
-
 def mostrar_pantalla_sistemas():
     st.header("Resolución de Sistemas de Ecuaciones")
-    
     # Paso 1: Entrada de coeficientes del sistema 3x3
     st.write("Ingresa los coeficientes del sistema de ecuaciones 3x3:")
-    
     # Crear una matriz vacía para los coeficientes
     matriz_coeficientes = []
     vector_constantes = []
-    
     for i in range(3):
         st.subheader(f"Ecuación {i + 1}")
         col1, col2, col3, col4 = st.columns(4)
-        
         with col1:
             a = st.number_input(f"Coeficiente de x (Ecuación {i + 1})", value=1.0, key=f"a_{i}")
         with col2:
@@ -172,7 +124,6 @@ def mostrar_pantalla_sistemas():
             c = st.number_input(f"Coeficiente de z (Ecuación {i + 1})", value=1.0, key=f"c_{i}")
         with col4:
             d = st.number_input(f"Término independiente (Ecuación {i + 1})", value=1.0, key=f"d_{i}")
-        
         # Agregar los coeficientes a la matriz y el vector
         matriz_coeficientes.append([a, b, c])
         vector_constantes.append(d)
@@ -181,7 +132,6 @@ def mostrar_pantalla_sistemas():
     st.subheader("Matriz de Coeficientes")
     for i, fila in enumerate(matriz_coeficientes):
         st.text(f"Ecuación {i + 1}: {[formatear_numero(x) for x in fila]}")
-    
     st.subheader("Vector de Términos Independientes")
     st.text([formatear_numero(x) for x in vector_constantes])
     
@@ -204,7 +154,6 @@ def mostrar_pantalla_sistemas():
                 st.write(f"x = {formatear_numero(soluciones[0])}")
                 st.write(f"y = {formatear_numero(soluciones[1])}")
                 st.write(f"z = {formatear_numero(soluciones[2])}")
-            
             elif metodo == "Álgebra Lineal":
                 det_A, adjunta, inversa, soluciones = resolver_algebra_lineal(matriz_coeficientes, vector_constantes)
                 st.subheader("Resultados (Álgebra Lineal):")
@@ -218,7 +167,6 @@ def mostrar_pantalla_sistemas():
                 st.write(f"x = {formatear_numero(soluciones[0])}")
                 st.write(f"y = {formatear_numero(soluciones[1])}")
                 st.write(f"z = {formatear_numero(soluciones[2])}")
-            
             elif metodo == "Gauss-Jordan":
                 pasos, matriz_resuelta, det_A, soluciones = resolver_gauss_jordan(matriz_coeficientes, vector_constantes)
                 st.subheader("Resultados (Gauss-Jordan):")
@@ -232,9 +180,8 @@ def mostrar_pantalla_sistemas():
                 st.write(f"x = {formatear_numero(soluciones[0])}")
                 st.write(f"y = {formatear_numero(soluciones[1])}")
                 st.write(f"z = {formatear_numero(soluciones[2])}")
-        
         except ValueError as e:
-            st.error(str(e))
+            st.error(str(e).replace("pivote", "elemento principal"))  # Reemplazar "pivote" en mensajes de error
     
     # Botón de regreso
     if st.button("Regresar", key="back_button"):

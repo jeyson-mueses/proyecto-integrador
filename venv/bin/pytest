@@ -1,4 +1,4 @@
-#!/home/andruudev/Documents/proyecto-integrador/venv/bin/python
+#!/home/andruudev/Documents/proyecto-integrador/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
