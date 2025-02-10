@@ -1,10 +1,6 @@
 from typing import Callable, Dict
 
 def formatear_numero(valor):
-    """
-    Formatea un número para mostrarlo como entero si es equivalente a un valor entero,
-    o como decimal con dos cifras si no lo es.
-    """
     if abs(valor - round(valor)) < 1e-9:  # Verificar si el número es prácticamente un entero
         return int(round(valor))
     else:
@@ -13,10 +9,7 @@ def formatear_numero(valor):
 def calcular_propiedades_funcion(funcion: Callable[[float], float], tipo_funcion: str, coeficientes) -> Dict[str, str]:
     propiedades = {}
     
-    # Dominio
     propiedades["Dominio"] = "(-∞, ∞)"
-    
-    # Rango
     if tipo_funcion == "Lineal":
         propiedades["Rango"] = "(-∞, ∞)"
     elif tipo_funcion == "Cuadrática":
@@ -59,13 +52,13 @@ def calcular_propiedades_funcion(funcion: Callable[[float], float], tipo_funcion
         if b == 0 and a != 0:
             propiedades["Paridad"] = "Impar"
         else:
-            propiedades["Paridad"] = "Ninguna"
+            propiedades["Paridad"] = "Ni par, ni impar"
     elif tipo_funcion == "Cuadrática":
         a, b, c = coeficientes
         if b == 0:
             propiedades["Paridad"] = "Par"
         else:
-            propiedades["Paridad"] = "Ninguna"
+            propiedades["Paridad"] = "Ni par, ni impar"
     elif tipo_funcion == "Cúbica":
         a, b, c, d = coeficientes
         if b == 0 and d == 0:
@@ -105,7 +98,7 @@ def calcular_propiedades_funcion(funcion: Callable[[float], float], tipo_funcion
     return propiedades
 
 def validar_coeficientes(coeficientes):
-    """Valida que los coeficientes sean números válidos."""
+    #Valida que los coeficientes sean números válidos
     for coef in coeficientes:
         if not isinstance(coef, (int, float)):
             return False

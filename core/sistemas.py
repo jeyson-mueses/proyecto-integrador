@@ -1,27 +1,16 @@
 def formatear_numero(valor):
-    """
-    Formatea un número para mostrarlo sin decimales si es entero.
-    
-    Args:
-        valor: El número a formatear.
-    
-    Returns:
-        Un entero si el número es entero, o un flotante redondeado si no lo es.
-    """
+
     if abs(valor - round(valor)) < 1e-9:  # Verificar si el número es prácticamente entero
         return int(round(valor))
-    return round(valor, 2)  # Redondear a 2 decimales si no es entero
+    return round(valor, 2)
+
+def formatear_matriz(matriz):
+
+    return "\n".join([str([formatear_numero(x) for x in fila]) for fila in matriz])
+
 
 def calcular_determinante(matriz):
-    """
-    Calcula el determinante de una matriz 3x3.
-    
-    Args:
-        matriz: Una matriz 3x3 representada como una lista de listas.
-    
-    Returns:
-        El determinante de la matriz.
-    """
+
     a11, a12, a13 = matriz[0]
     a21, a22, a23 = matriz[1]
     a31, a32, a33 = matriz[2]
@@ -33,18 +22,7 @@ def calcular_determinante(matriz):
     )
 
 def resolver_cramer(matriz_coeficientes, vector_constantes):
-    """
-    Resuelve un sistema de ecuaciones lineales 3x3 usando la regla de Cramer.
-    
-    Args:
-        matriz_coeficientes: Matriz 3x3 de coeficientes.
-        vector_constantes: Vector de términos independientes.
-    
-    Returns:
-        det_A: Determinante principal.
-        det_x, det_y, det_z: Determinantes modificados para x, y, z.
-        soluciones: Lista con las soluciones [x, y, z].
-    """
+
     # Calcular el determinante principal
     det_A = calcular_determinante(matriz_coeficientes)
     
@@ -81,19 +59,7 @@ def resolver_cramer(matriz_coeficientes, vector_constantes):
     return det_A, det_x, det_y, det_z, [x, y, z]
 
 def resolver_algebra_lineal(matriz_coeficientes, vector_constantes):
-    """
-    Resuelve un sistema de ecuaciones lineales 3x3 usando álgebra lineal.
-    
-    Args:
-        matriz_coeficientes: Matriz 3x3 de coeficientes.
-        vector_constantes: Vector de términos independientes.
-    
-    Returns:
-        det_A: Determinante principal.
-        adjunta: Matriz adjunta.
-        inversa: Matriz inversa.
-        soluciones: Lista con las soluciones [x, y, z].
-    """
+
     # Calcular el determinante principal
     det_A = calcular_determinante(matriz_coeficientes)
     
@@ -128,14 +94,18 @@ def resolver_algebra_lineal(matriz_coeficientes, vector_constantes):
     return det_A, adjunta, inversa, soluciones
 
 def resolver_gauss_jordan(matriz_coeficientes, vector_constantes):
-    """
-    Resuelve un sistema de ecuaciones lineales 3x3 usando el método de Gauss-Jordan.
-    """
     # Crear la matriz aumentada
     matriz_aumentada = [fila + [vector_constantes[i]] for i, fila in enumerate(matriz_coeficientes)]
-    
     pasos = []
     n = len(matriz_aumentada)
+    
+    # Contador explícito para los pasos
+    paso_numero = 1
+    
+    # Mostrar la matriz inicial
+    pasos.append(f"Paso {paso_numero}: Matriz inicial")
+    pasos.append(formatear_matriz(matriz_aumentada))
+    paso_numero += 1
     
     # Aplicar eliminación gaussiana
     for i in range(n):
@@ -145,14 +115,18 @@ def resolver_gauss_jordan(matriz_coeficientes, vector_constantes):
             raise ValueError("El sistema no tiene solución única (elemento principal cero).")
         
         matriz_aumentada[i] = [x / elemento_principal for x in matriz_aumentada[i]]
-        pasos.append(f"Paso {len(pasos) + 1}: Dividir fila {i + 1} por {elemento_principal:.2f}")
+        pasos.append(f"Paso {paso_numero}: Dividir fila {i + 1} por {formatear_numero(elemento_principal)}")
+        pasos.append(formatear_matriz(matriz_aumentada))
+        paso_numero += 1
         
         # Eliminar los elementos debajo/arriba del elemento principal
         for j in range(n):
             if i != j:
                 factor = matriz_aumentada[j][i]
                 matriz_aumentada[j] = [matriz_aumentada[j][k] - factor * matriz_aumentada[i][k] for k in range(n + 1)]
-                pasos.append(f"Paso {len(pasos) + 1}: F{j + 1} = F{j + 1} - {factor:.2f} * F{i + 1}")
+                pasos.append(f"Paso {paso_numero}: F{j + 1} = F{j + 1} - {formatear_numero(factor)} * F{i + 1}")
+                pasos.append(formatear_matriz(matriz_aumentada))
+                paso_numero += 1
     
     # Extraer las soluciones
     soluciones = [fila[-1] for fila in matriz_aumentada]

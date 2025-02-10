@@ -4,10 +4,6 @@ import streamlit as st
 from io import BytesIO
 
 def formatear_numero(valor):
-    """
-    Formatea un número para mostrarlo como entero si es equivalente a un valor entero,
-    o como decimal con dos cifras si no lo es.
-    """
     if abs(valor - round(valor)) < 1e-9:  # Verificar si el número es prácticamente un entero
         return int(round(valor))
     else:
