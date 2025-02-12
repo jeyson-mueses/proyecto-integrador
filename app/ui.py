@@ -1,4 +1,5 @@
 import streamlit as st
+import numpy as np
 from core.sistemas import resolver_cramer, resolver_algebra_lineal, resolver_gauss_jordan, formatear_numero, formatear_matriz
 from core.funciones import calcular_propiedades_funcion, validar_coeficientes
 from services.graficos import graficar_funcion
@@ -115,9 +116,89 @@ def mostrar_pantalla_funciones():
         st.session_state.num_funciones = 0
         st.session_state.funciones_ingresadas = []
 
+
+
+
+
+
+def resolver_sistema_con_validacion(matriz_coeficientes, vector_constantes):
+    A = np.array(matriz_coeficientes, dtype=float)
+    b = np.array(vector_constantes, dtype=float)
+
+    # Calcular el determinante
+    det_A = np.linalg.det(A)
+
+    if abs(det_A) < 1e-9:  # Determinante prácticamente cero
+        st.warning("La determinante de la matriz es cero. Analizando el sistema...")
+
+        # Calcular el rango de la matriz de coeficientes y la matriz ampliada
+        rank_A = np.linalg.matrix_rank(A)
+        rank_Ab = np.linalg.matrix_rank(np.column_stack((A, b)))
+
+        if rank_A != rank_Ab:
+            st.error("El sistema no tiene solución (las ecuaciones son inconsistentes).")
+            return None
+        elif rank_A == rank_Ab < A.shape[1]:  # Infinitas soluciones
+            st.info("El sistema tiene infinitas soluciones. Calculando soluciones paramétricas...")
+            return calcular_soluciones_parametricas(A, b)
+        else:
+            st.error("Error inesperado al analizar el sistema.")
+            return None
+    else:
+        # Resolver el sistema usando álgebra lineal (método directo)
+        soluciones = np.linalg.solve(A, b)
+        return soluciones
+
+
+def calcular_soluciones_parametricas(A, b):
+    """
+    Calcula las soluciones paramétricas de un sistema con infinitas soluciones.
+    """
+    from sympy import Matrix, symbols
+
+    # Convertir la matriz a formato sympy
+    A_sympy = Matrix(A)
+    b_sympy = Matrix(b)
+
+    # Crear una matriz ampliada [A|b]
+    matriz_ampliada = A_sympy.row_join(b_sympy)
+
+    # Reducir la matriz a su forma escalonada reducida por filas (RREF)
+    rref_matrix, pivot_columns = matriz_ampliada.rref()
+
+    # Identificar las variables libres
+    num_variables = A.shape[1]
+    variables_libres = [i for i in range(num_variables) if i not in pivot_columns]
+
+    # Crear símbolos para las variables libres
+    simbolos = symbols(f'p0:{len(variables_libres)}')
+
+    # Construir las soluciones paramétricas
+    soluciones = []
+    for i in range(num_variables):
+        if i in pivot_columns:
+            expr = rref_matrix[i, -1]
+            for j, libre in enumerate(variables_libres):
+                expr -= rref_matrix[i, libre] * simbolos[j]
+            soluciones.append(expr)
+        else:
+            # Variable libre: asignar el símbolo correspondiente
+            idx_libre = variables_libres.index(i)
+            soluciones.append(simbolos[idx_libre])
+
+    return soluciones
+
+
 def mostrar_pantalla_sistemas():
     st.header("Resolución de Sistemas de Ecuaciones")
     st.write("Ingresa los coeficientes del sistema de ecuaciones 3x3:")
+    st.latex(r"""
+        \begin{aligned}
+        a_1x + b_1y + c_1z &= d_1 \\
+        a_2x + b_2y + c_2z &= d_2 \\
+        a_3x + b_3y + c_3z &= d_3
+        \end{aligned}
+    """)
     matriz_coeficientes = []
     vector_constantes = []
 

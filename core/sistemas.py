@@ -27,7 +27,7 @@ def resolver_cramer(matriz_coeficientes, vector_constantes):
     det_A = calcular_determinante(matriz_coeficientes)
     
     if det_A == 0:
-        raise ValueError("El sistema no tiene solución única (determinante cero).")
+        raise ValueError("El sistema no tiene solución única. Puede ser inconsistente o tener infinitas soluciones. (Determinante Cero).")
     
     # Crear matrices modificadas para calcular det_x, det_y, det_z
     matriz_x = [
@@ -64,7 +64,7 @@ def resolver_algebra_lineal(matriz_coeficientes, vector_constantes):
     det_A = calcular_determinante(matriz_coeficientes)
     
     if det_A == 0:
-        raise ValueError("El sistema no tiene solución única (determinante cero).")
+        raise ValueError("El sistema no tiene solución única. Puede ser inconsistente o tener infinitas soluciones. (Determinante Cero).")
     
     # Calcular la matriz adjunta
     adjunta = [
@@ -112,7 +112,7 @@ def resolver_gauss_jordan(matriz_coeficientes, vector_constantes):
         # Hacer el elemento principal igual a 1
         elemento_principal = matriz_aumentada[i][i]
         if elemento_principal == 0:
-            raise ValueError("El sistema no tiene solución única (elemento principal cero).")
+            raise ValueError("El sistema no tiene solución única. Puede ser inconsistente o tener infinitas soluciones. (Determinante Cero).")
         
         matriz_aumentada[i] = [x / elemento_principal for x in matriz_aumentada[i]]
         pasos.append(f"Paso {paso_numero}: Dividir fila {i + 1} por {formatear_numero(elemento_principal)}")
